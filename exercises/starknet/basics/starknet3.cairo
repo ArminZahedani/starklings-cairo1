@@ -5,7 +5,6 @@
 // only the owner to update the contract, they agree.
 // Can you help them write this contract?
 
-// I AM NOT DONE
 
 #[contract]
 mod ProgressTracker {
@@ -15,7 +14,7 @@ mod ProgressTracker {
     struct Storage {
         contract_owner: ContractAddress,
         // TODO: Set types for LegacyMap
-        progress: LegacyMap<>
+        progress: LegacyMap<ContractAddress, u16>
     }
 
     #[constructor]
@@ -25,11 +24,14 @@ mod ProgressTracker {
 
     #[external]
     fn set_progress(user: ContractAddress, new_progress: u16) {// TODO: assert owner is calling
+        assert(get_caller_address() == contract_owner::read(), 'Not correct owner');
     // TODO: set new_progress for user,
+        progress::write(user, new_progress); 
     }
 
     #[view]
     fn get_progress(user: ContractAddress) -> u16 {// Get user progress
+        progress::read(user)
     }
 }
 
